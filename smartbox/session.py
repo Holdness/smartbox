@@ -12,11 +12,15 @@ _DEFAULT_RETRY_ATTEMPTS = 5
 _DEFAULT_BACKOFF_FACTOR = 0.1
 _DEFAULT_SOCKET_RECONNECT_ATTEMPTS = 5,
 _DEFAULT_SOCKET_BACKOFF_FACTOR = 0.1,
-_
+
 _MIN_TOKEN_LIFETIME = 60  # Minimum time left before expiry before we refresh (seconds)
 
 _LOGGER = logging.getLogger(__name__)
 
+        _LOGGER.debug(
+            (
+                f"We made it here"
+            )
 
 class Session(object):
     def __init__(
@@ -28,7 +32,7 @@ class Session(object):
         retry_attempts: int = _DEFAULT_RETRY_ATTEMPTS,
         backoff_factor: float = _DEFAULT_BACKOFF_FACTOR,
         socket_reconnect_attempts: int = _DEFAULT_SOCKET_RECONNECT_ATTEMPTS,
-        socket_backoff_factor: float = _DEFAULT_SOCKET_RECONNECT_ATTEMPTS,        
+        socket_backoff_factor: float = _DEFAULT_SOCKET_BACKOFF_FACTOR,        
     ) -> None:
         self._api_name = api_name
         self._api_host = f"https://{self._api_name}.helki.com"
