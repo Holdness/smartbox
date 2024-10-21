@@ -10,8 +10,8 @@ from .error import SmartboxError
 
 _DEFAULT_RETRY_ATTEMPTS = 5
 _DEFAULT_BACKOFF_FACTOR = 0.1
-_DEFAULT_SOCKET_RECONNECT_ATTEMPTS = 5,
-_DEFAULT_SOCKET_BACKOFF_FACTOR = 0.1,
+_DEFAULT_SOCKET_RECONNECT_ATTEMPTS = 5
+_DEFAULT_SOCKET_BACKOFF_FACTOR = 0.1
 
 _MIN_TOKEN_LIFETIME = 60  # Minimum time left before expiry before we refresh (seconds)
 
@@ -211,4 +211,3 @@ class Session(object):
     def set_device_power_limit(self, device_id: str, power_limit: int) -> None:
         data = {"power_limit": str(power_limit)}
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
-        
