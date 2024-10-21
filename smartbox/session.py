@@ -1,3 +1,4 @@
+
 import datetime
 import json
 import logging
@@ -10,14 +11,11 @@ from .error import SmartboxError
 
 _DEFAULT_RETRY_ATTEMPTS = 5
 _DEFAULT_BACKOFF_FACTOR = 0.1
-_DEFAULT_SOCKET_RECONNECT_ATTEMPTS = 5
-_DEFAULT_SOCKET_BACKOFF_FACTOR = 0.1
-
 _MIN_TOKEN_LIFETIME = 60  # Minimum time left before expiry before we refresh (seconds)
 
 _LOGGER = logging.getLogger(__name__)
 
-_LOGGER.debug(f"We made it here")
+_LOGGER.debug(f"Main Branch")
 
 class Session(object):
     def __init__(
@@ -28,8 +26,6 @@ class Session(object):
         password: str,
         retry_attempts: int = _DEFAULT_RETRY_ATTEMPTS,
         backoff_factor: float = _DEFAULT_BACKOFF_FACTOR,
-        socket_reconnect_attempts: int = _DEFAULT_SOCKET_RECONNECT_ATTEMPTS,
-        socket_backoff_factor: float = _DEFAULT_SOCKET_BACKOFF_FACTOR,        
     ) -> None:
         self._api_name = api_name
         self._api_host = f"https://{self._api_name}.helki.com"
@@ -39,8 +35,6 @@ class Session(object):
         retry_strategy = Retry(  # type: ignore
             total=retry_attempts,
             backoff_factor=backoff_factor,
-            socket_backoff_factor = socket_backoff_factor,
-            socket_reconnect_attempts = socket_reconnect_attempts,
             status_forcelist=[429, 500, 502, 503, 504],
             allowed_methods=["GET", "POST"],
         )
