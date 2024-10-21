@@ -28,8 +28,7 @@ class Session(object):
         retry_attempts: int = _DEFAULT_RETRY_ATTEMPTS,
         backoff_factor: float = _DEFAULT_BACKOFF_FACTOR,
         socket_reconnect_attempts: int = _DEFAULT_SOCKET_RECONNECT_ATTEMPTS,
-        socket_backoff_factor: float = _DEFAULT_SOCKET_RECONNECT_ATTEMPTS
-        
+        socket_backoff_factor: float = _DEFAULT_SOCKET_RECONNECT_ATTEMPTS,        
     ) -> None:
         self._api_name = api_name
         self._api_host = f"https://{self._api_name}.helki.com"
