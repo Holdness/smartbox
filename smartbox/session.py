@@ -39,6 +39,8 @@ class Session(object):
         retry_strategy = Retry(  # type: ignore
             total=retry_attempts,
             backoff_factor=backoff_factor,
+            socket_backoff_factor = socket_backoff_factor,
+            socket_reconnect_attempts = socket_reconnect_attempts,
             status_forcelist=[429, 500, 502, 503, 504],
             allowed_methods=["GET", "POST"],
         )
