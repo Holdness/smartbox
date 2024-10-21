@@ -17,7 +17,7 @@ _MIN_TOKEN_LIFETIME = 60  # Minimum time left before expiry before we refresh (s
 
 _LOGGER = logging.getLogger(__name__)
 
-_LOGGER.debug( f"We made it here")
+_LOGGER.debug(f"We made it here")
 
 class Session(object):
     def __init__(
