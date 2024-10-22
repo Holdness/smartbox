@@ -2,19 +2,37 @@ import datetime
 import json
 import logging
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+from typing import Any, Dict, List
 
+_DEFAULT_RETRY_ATTEMPTS = 5
+_DEFAULT_BACKOFF_FACTOR = 0.1
 _MIN_TOKEN_LIFETIME = 60  # Minimum time left before expiry before we refresh (seconds)
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class Session(object):
-    def __init__(self, api_name, basic_auth_credentials, x_referer, x_serialid, username, password):
+    def __init__(self, api_name, basic_auth_credentials, x_referer, x_serialid, username, password, 
+        retry_attempts: int = _DEFAULT_RETRY_ATTEMPTS,
+        backoff_factor: float = _DEFAULT_BACKOFF_FACTOR,):
         self._api_name = api_name
         self._api_host = f"https://api-{self._api_name}.helki.com"
         self._basic_auth_credentials = basic_auth_credentials
         self._x_referer = x_referer
         self._x_serialid = x_serialid
+        self._requests = requests.Session()
+        retry_strategy = Retry(  # type: ignore
+            total=retry_attempts,
+            backoff_factor=backoff_factor,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "POST"],
+        )
+        http_adapter = HTTPAdapter(max_retries=retry_strategy)
+        self._requests.mount("http://", http_adapter)
+        self._requests.mount("https://", http_adapter)
+            
         self._auth({'grant_type': 'password', 'username': username, 'password': password})
 
     def _auth(self, credentials):
