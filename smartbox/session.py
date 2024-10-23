@@ -28,7 +28,7 @@ class Session(object):
         backoff_factor: float = _DEFAULT_BACKOFF_FACTOR,
     ) -> None:
         self._api_name = api_name
-        self._api_host = f"https://api-{self._api_name}.helki.com"
+        self._api_host = f"https://self._api_name}.helki.com"
         self._basic_auth_credentials = basic_auth_credentials
         self._x_referer = x_referer
         self._x_serialid = x_serialid
