@@ -156,12 +156,14 @@ class Session(object):
         return response["nodes"]
 
     def get_status(self, device_id: str, node: Dict[str, Any]) -> Dict[str, str]:
-        if node == "pmo"
-        return self._api_request(
-            f"devs/{device_id}/{node['type']}/{node['addr']}/power"
-        else    
-        return self._api_request(
-            f"devs/{device_id}/{node['type']}/{node['addr']}/status"
+        _LOGGER.debug(f"Node: {node['type']}")
+        if node['type'] == "pmo":
+            return self._api_request(
+                f"devs/{device_id}/{node['type']}/{node['addr']}/power"
+            )
+        else:  
+            return self._api_request(
+                f"devs/{device_id}/{node['type']}/{node['addr']}/status"
         )
 
     def set_status(
