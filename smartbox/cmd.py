@@ -41,7 +41,7 @@ def smartbox(ctx, api_name, basic_auth_creds, username, password, verbose):
 @click.pass_context
 def devices(ctx):
     session = ctx.obj["session"]
-    devices = session.get_devices()
+    devices = session.devices()
     _pretty_print(devices)
 
 
@@ -182,6 +182,17 @@ def device_power_limit(ctx):
         print(f"{device['name']} (dev_id: {device['dev_id']})")
         device_power_limit = session.get_device_power_limit(device["dev_id"])
         _pretty_print(device_power_limit)
+
+@smartbox.command(help="Show device records (aka samples")
+@click.pass_context
+def device_samples(ctx):
+    session = ctx.obj["session"]
+    devices = session.get_devices()
+
+    for device in devices:
+        print(f"{device['name']} (dev_id: {device['dev_id']})")
+        device_samples_list = session.get_device_samples(device["dev_id"],start_date, end_date)
+        _pretty_print(device_samples_list)
 
 
 @smartbox.command(help="Set device power_limit")
