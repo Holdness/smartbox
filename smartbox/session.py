@@ -216,3 +216,9 @@ class Session(object):
     def set_device_power_limit(self, device_id: str, power_limit: int) -> None:
         data = {"power_limit": str(power_limit)}
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
+
+    def get_samples(self, device_id: str, node: Dict[str, Any], start_date: str, end_date: str ) -> Dict[str, str, str, str]:
+        _LOGGER.debug(f"Node: {node['type']}")
+        return self._api_request(
+                f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={start_date}&end={end_date}"
+        )
