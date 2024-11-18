@@ -220,5 +220,5 @@ class Session(object):
     def get_device_samples(self, device_id: str, node: Dict[str, Any], start_date: int, end_date: int ) -> Dict[str, Any]:
         _LOGGER.debug(f"Node: {node['type']}")
         return self._api_request(
-                f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={start_date}&end={end_date}"
+                f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={str(start_date)}&end={str(end_date)}"
         )
