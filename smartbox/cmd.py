@@ -24,7 +24,7 @@ def _pretty_print(data):
 @click.option(
     "-v", "--verbose/--no-verbose", default=False, help="Enable verbose logging"
 )
-@click.option("-r, "--referer",  required = True, help = "Name of Referer Site")
+@click.option("-r", "--referer",  required = True, help = "Name of Referer Site")
 @click.option("-s", "--serialid", required = True, help = "Serial ID")
 
 @click.pass_context
@@ -240,3 +240,4 @@ def socket(ctx, device_id):
 # For debuggging
 if __name__ == "__main__":
     smartbox()
+    
