@@ -2,6 +2,7 @@ import asyncio
 import click
 import json
 import logging
+import time
 
 from .session import Session
 from .socket import SocketSession
@@ -23,8 +24,11 @@ def _pretty_print(data):
 @click.option(
     "-v", "--verbose/--no-verbose", default=False, help="Enable verbose logging"
 )
+@click.option("-r, "--referer",  required = True, help = "Name of Referer Site")
+@click.option("-s", "--serialid", required = True, help = "Serial ID")
+
 @click.pass_context
-def smartbox(ctx, api_name, basic_auth_creds, username, password, verbose):
+def smartbox(ctx, api_name, basic_auth_creds, referer, serialid, username, password, verbose):
     ctx.ensure_object(dict)
     logging.basicConfig(
         format="%(asctime)s %(levelname)-8s "
@@ -32,7 +36,7 @@ def smartbox(ctx, api_name, basic_auth_creds, username, password, verbose):
         level=logging.DEBUG if verbose else logging.INFO,
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    session = Session(api_name, basic_auth_creds, username, password)
+    session = Session(api_name, basic_auth_creds, referer, serialid, username, password)
     ctx.obj["session"] = session
     ctx.obj["verbose"] = verbose
 
@@ -191,7 +195,7 @@ def device_samples(ctx):
 
     for device in devices:
         print(f"{device['name']} (dev_id: {device['dev_id']})")
-        device_samples_list = session.get_device_samples(device["dev_id"],start_date, end_date)
+        device_samples_list = session.get_device_samples(device["dev_id"], time.time() - 3600 , time.time() + 3600)
         _pretty_print(device_samples_list)
 
 
