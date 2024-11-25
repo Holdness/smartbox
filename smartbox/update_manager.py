@@ -136,6 +136,13 @@ class UpdateManager(object):
         """Subscribe to device away status updates."""
         self.subscribe_to_dev_data(".away_status", callback)
         self.subscribe_to_updates(r"^/mgr/away_status", ".body", callback)
+        
+    # def subscribe_to_device_samples(
+    #    self, callback: Callable[[Dict[str, Any]], None]
+    #) -> None:
+    #    """Subscribe to device samples."""
+    #    self.subscribe_to_dev_data(".samples", callback)
+    #    self.subscribe_to_updates(r"^/samples", ".body", callback) */   
 
     def subscribe_to_device_power_limit(self, callback: Callable[[int], None]) -> None:
         """Subscribe to device power limit updates."""
@@ -166,6 +173,25 @@ class UpdateManager(object):
         self.subscribe_to_updates(
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/status", ".body", update_wrapper
         )
+        
+    def subscribe_to_node_samples(
+        self, callback: Callable[[str, int, Dict[str, Any]], None]
+    ) -> None:
+        """Subscribe to node samples updates."""
+
+        def dev_data_wrapper(data: Dict[str, Any]) -> None:
+            callback(data["type"], int(data["addr"]), data["samples"]),
+
+        self.subscribe_to_dev_data(
+            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
+        )
+
+        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
+            callback(node_type, int(addr), data),
+
+        self.subscribe_to_updates(
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples", ".body", update_wrapper
+        )    
 
     def subscribe_to_node_setup(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
