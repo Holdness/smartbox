@@ -1,3 +1,4 @@
+
 """Smartbox socket update manager."""
 
 import jq
@@ -128,6 +129,7 @@ class UpdateManager(object):
 
         Named groups in path_regex are passed as kwargs to callback.
         """
+        _LOGGER.debug(f"Subscribe to updates: path_regex: {path_regex} , jq_expr: {jq_expr}, callback: {callback}")
         sub = UpdateSubscription(path_regex, jq_expr, callback)
         self._update_subscriptions.append(sub)
 
@@ -191,6 +193,7 @@ class UpdateManager(object):
             callback(node_type, int(addr), data),
 
         self.subscribe_to_updates(
+            
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=" + str((time.time() - time.time() % 3600) - 3600) + "&end=" + str((time.time() - time.time() % 3600) + 1800), ".body", update_wrapper
         )    
 
