@@ -194,7 +194,7 @@ class UpdateManager(object):
 
         self.subscribe_to_updates(
             
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=" + str((time.time() - time.time() % 3600) - 3600) + "&end=" + str((time.time() - time.time() % 3600) + 1800), ".body", update_wrapper
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=" + str(round((time.time() - time.time() % 3600) - 3600)) + "&end=" + str(round((time.time() - time.time() % 3600) + 1800)), ".body", update_wrapper
         )    
 
     def subscribe_to_node_setup(
