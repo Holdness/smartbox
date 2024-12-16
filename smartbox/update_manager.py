@@ -119,6 +119,7 @@ class UpdateManager(object):
 
     def subscribe_to_dev_data(self, jq_expr: str, callback: Callable) -> None:
         """Subscribe to receive device data."""
+        _LOGGER.debug(f"Subscribe to dev data:  self: {self}, jq_expr: {jq_expr}, callback: {callback}, ")
         sub = DevDataSubscription(jq_expr, callback)
         self._dev_data_subscriptions.append(sub)
 
@@ -181,6 +182,8 @@ class UpdateManager(object):
         self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node samples updates."""
+        
+        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
             callback(data["type"], int(data["addr"]), data["samples"]),
