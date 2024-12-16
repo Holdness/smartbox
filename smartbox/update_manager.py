@@ -59,7 +59,7 @@ class DevDataSubscription(object):
     def match(self, input_data: Dict[str, Any]) -> None:
         """Return matches for this subscription for the given dev data."""
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
-        _LOGGER.debug(f"Input Data: {input_data}")
+
         try:
             for match in self._jq_matcher.match(input_data):
                 if match is not None:
@@ -88,6 +88,7 @@ class UpdateSubscription(object):
         path_match_kwargs = path_match.groupdict()
         matched = False
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
+        _LOGGER.debug(f"Input Data: {input_data}")
         try:
             for data_match in self._jq_matcher.match(input_data):
                 if data_match is not None:
