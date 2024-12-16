@@ -59,6 +59,7 @@ class DevDataSubscription(object):
     def match(self, input_data: Dict[str, Any]) -> None:
         """Return matches for this subscription for the given dev data."""
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
+        _LOGGER.debug(f"Input Data: {input_data}")
         try:
             for match in self._jq_matcher.match(input_data):
                 if match is not None:
@@ -195,8 +196,7 @@ class UpdateManager(object):
         def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
             callback(node_type, int(addr), data),
 
-        self.subscribe_to_updates(
-            
+        self.subscribe_to_updates(            
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=" + str(round((time.time() - time.time() % 3600) - 3600)) + "&end=" + str(round((time.time() - time.time() % 3600) + 1800)), ".body", update_wrapper
         )    
 
