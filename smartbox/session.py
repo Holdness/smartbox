@@ -217,8 +217,11 @@ class Session(object):
         data = {"power_limit": str(power_limit)}
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
-    def get_device_samples(self, device_id: str, node: Dict[str, Any], start_date: int, end_date: int ) -> Dict[str, Any]:
+    def get_device_samples(self, device_id: str, node: Dict[str, Any], start_date: int, end_date: int, current_start_date: int ) -> Dict[str, Any]:
         _LOGGER.debug(f"Node: {node['type']}")
-        return self._api_request(
+        if (start_date == current_start_date) :
+            return {}
+        else :
+            return self._api_request(
                 f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={str(start_date)}&end={str(end_date)}"
         )
