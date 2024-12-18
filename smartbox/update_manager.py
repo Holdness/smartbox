@@ -185,10 +185,10 @@ class UpdateManager(object):
     ) -> None:
         """Subscribe to node samples updates."""
         
-        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
+        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback})
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
-            callback(data["type"], int(data["addr"]), data["samples"]),
+            callback(data["type"], int(data["addr"]), data["status"]),
 
         self.subscribe_to_dev_data(
             "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
