@@ -191,7 +191,7 @@ class UpdateManager(object):
             callback(data["type"], int(data["addr"]), data["samples"]),
 
         self.subscribe_to_dev_data(
-            "(.nodes[] | {addr, type, samples?start=" + str(round((time.time() - time.time() % 3600) - 3600)) + "&end=" + str(round((time.time() - time.time() % 3600) + 1800))})?", dev_data_wrapper
+            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
         )
 
         def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
