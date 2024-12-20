@@ -177,7 +177,7 @@ class UpdateManager(object):
 
         
         self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples/?start=(?P<start>\d+)&end=(?P<end>)", ".body", update_wrapper
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&end=(?P<end>)", ".body", update_wrapper
         )    
 
     def subscribe_to_node_status(
