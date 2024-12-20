@@ -143,13 +143,7 @@ class UpdateManager(object):
         self.subscribe_to_dev_data(".away_status", callback)
         self.subscribe_to_updates(r"^/mgr/away_status", ".body", callback)
         
-    # def subscribe_to_device_samples(
-    #    self, callback: Callable[[Dict[str, Any]], None]
-    #) -> None:
-    #    """Subscribe to device samples."""
-    #    self.subscribe_to_dev_data(".samples", callback)
-    #    self.subscribe_to_updates(r"^/samples", ".body", callback) */   
-
+ 
     def subscribe_to_device_power_limit(self, callback: Callable[[int], None]) -> None:
         """Subscribe to device power limit updates."""
         self.subscribe_to_dev_data(
@@ -160,6 +154,31 @@ class UpdateManager(object):
             ".body.power_limit",
             lambda p: callback(int(p)),
         )
+        
+            
+    def subscribe_to_node_samples(
+        self, callback: Callable[[str, int, Dict[str, Any], int, int], None]
+    ) -> None:
+        """Subscribe to node samples updates."""
+        
+        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
+
+    #    def dev_data_wrapper(data: Dict[str, Any]) -> None:
+    #        callback(data["type"], int(data["addr"]), data["samples"]),
+    
+        def dev_data_wrapper(data: Dict[str, Any]) -> None:
+            callback(data["type"], int(data["addr"]), data["samples"], data["start"], data["end"]),
+
+        self.subscribe_to_dev_data(
+            "(.nodes[] | {addr, type, status})?", dev_data_wrapper)
+
+        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str, start: int, end: int) -> None:
+            callback(node_type, int(addr), data, int(start), int(end))
+
+        
+        self.subscribe_to_updates(            
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples/?start=(?P<start>\d+)&end=(?P<end>)", ".body", update_wrapper
+        )    
 
     def subscribe_to_node_status(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
@@ -179,28 +198,6 @@ class UpdateManager(object):
         self.subscribe_to_updates(
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/status", ".body", update_wrapper
         )
-        
-    def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, Dict[str, Any]], None]
-    ) -> None:
-        """Subscribe to node samples updates."""
-        
-        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
-
-        def dev_data_wrapper(data: Dict[str, Any]) -> None:
-            callback(data["type"], int(data["addr"]), data["status"]),
-
-        self.subscribe_to_dev_data(
-            "(.nodes[] | {addr, type, status})?", dev_data_wrapper
-        )
-
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
-            callback(node_type, int(addr), data),
-
-        
-        self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=" + str(round((time.time() - time.time() % 3600) - 3600)) + "&end=" + str(round((time.time() - time.time() % 3600) + 1800)), ".body", update_wrapper
-        )    
 
     def subscribe_to_node_setup(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
