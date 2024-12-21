@@ -23,30 +23,6 @@ class OptimisedJQMatcher(object):
         m = _SIMPLE_JQ_RE.match(jq_expr)
         self._fast_path = False
         if m:
-"""Smartbox socket update manager."""
-
-import jq
-import logging
-import re
-from typing import Any, Callable, Dict, Iterable, List
-import time
-
-from .session import Session
-from .socket import SocketSession
-
-_LOGGER = logging.getLogger(__name__)
-
-_SIMPLE_JQ_RE = re.compile(r"^\.(\w+)$")
-
-
-class OptimisedJQMatcher(object):
-    """jq matcher that doesn't bother with jq for simple one-level element queries."""
-
-    def __init__(self, jq_expr: str):
-        """Create an OptimisedJQMatcher for any jq expression."""
-        m = _SIMPLE_JQ_RE.match(jq_expr)
-        self._fast_path = False
-        if m:
             self._fast_path = True
             self._simple_elem = m.group(1)
         else:
