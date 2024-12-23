@@ -167,7 +167,8 @@ class UpdateManager(object):
     #        callback(data["type"], int(data["addr"]), data["samples"]),
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
-                _LOGGER.debug(f"Dev Data: Type {data["type"]} start: {data["start_date"]}")
+                 
+                _LOGGER.debug(f"Dev Data: Items: {data.items} Keys: {data.keys}")
                 callback(data["type"], int(data["addr"]), data["start_date"], data["end_date"], data["samples"]),
 
     #    self.subscribe_to_dev_data(
