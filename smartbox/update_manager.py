@@ -167,9 +167,10 @@ class UpdateManager(object):
     #        callback(data["type"], int(data["addr"]), data["samples"]),
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
-                 
-                _LOGGER.debug(f"Dev Data: Items: {data.items} Keys: {data.keys}")
-                callback(data["type"], int(data["addr"]), data["start_date"], data["end_date"], data["samples"]),
+                 for item in data:
+                    for key, value in item:
+                       _LOGGER.debug(f"Dev Data: Items: {value} Keys: {key}")
+      #          callback(data["type"], int(data["addr"]), data["start_date"], data["end_date"], data["samples"]),
 
     #    self.subscribe_to_dev_data(
     #        "(.nodes[] | {addr, type, samples, start, end})?", dev_data_wrapper)
