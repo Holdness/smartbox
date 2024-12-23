@@ -133,6 +133,8 @@ class UpdateManager(object):
         Named groups in path_regex are passed as kwargs to callback.
         """
         _LOGGER.debug(f"Subscribe to updates: path_regex: {path_regex} , jq_expr: {jq_expr}, callback: {callback}")
+        for item in callback.dict:
+                    _LOGGER.debug(f"Callback Dict: {item} Keys: {item}")
         sub = UpdateSubscription(path_regex, jq_expr, callback)
         self._update_subscriptions.append(sub)
 
