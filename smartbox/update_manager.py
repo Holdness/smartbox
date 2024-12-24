@@ -157,10 +157,12 @@ class UpdateManager(object):
         
             
     def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, Dict[str, Any]], None]
+        self, callback: Callable[[str, int, str,str, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node samples updates."""
         
+        start = str(round(time.time() - time.time() % 3600) - 3600)
+        end = str(round(time.time() % 3600) + 1800)
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
 
     #    def dev_data_wrapper(data: Dict[str, Any]) -> None:
@@ -168,8 +170,10 @@ class UpdateManager(object):
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
                  for item in data:
-                    _LOGGER.debug(f"Dev Data: Items: {item} Keys: {item}")
-                 callback(data["type"], int(data["addr"]), data["samples"]),
+                    _LOGGER.debug(f"Dev Data: Items: {item} ")
+                    for thing in item:
+                        _LOGGER.debug(f"Dev Data: Thing: {thing} ")
+                 callback(data["type"], int(data["addr"]), start, end, data["samples"]),
 
         self.subscribe_to_dev_data(
             "(.nodes[] | {addr, type, samples})?", dev_data_wrapper)
@@ -177,12 +181,11 @@ class UpdateManager(object):
     #    self.subscribe_to_dev_data(
     #        "(.nodes[])?", dev_data_wrapper)
 
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
+        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str, start: str, end: str) -> None:
             _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr}, Data: {data}")
               
-            start = str(round(time.time() - time.time() % 3600) - 3600)
-            end = str(round(time.time() % 3600) + 1800)
-            callback(node_type, int(addr), data),
+
+            callback(node_type, int(addr), start, end, data,),
 
         
         self.subscribe_to_updates(            
