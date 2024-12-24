@@ -157,7 +157,7 @@ class UpdateManager(object):
         
             
     def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, str, str, Dict[str, Any]], None]
+        self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node samples updates."""
         
@@ -171,19 +171,19 @@ class UpdateManager(object):
                     _LOGGER.debug(f"Dev Data: Items: {item} Keys: {item}")
       #          callback(data["type"], int(data["addr"]), data["start_date"], data["end_date"], data["samples"]),
 
-    #    self.subscribe_to_dev_data(
-    #        "(.nodes[] | {addr, type, samples, start, end})?", dev_data_wrapper)
-        
         self.subscribe_to_dev_data(
-            "(.nodes[])?", dev_data_wrapper)
+            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper)
+        
+    #    self.subscribe_to_dev_data(
+    #        "(.nodes[])?", dev_data_wrapper)
 
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str, start_date: str, end_date: str) -> None:
-            _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr}, Data: {data},  Start: {start_date}, End: {end_date}")
-            callback(node_type, int(addr), start_date, end_date, data)
+        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
+            _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr}, Data: {data}")
+            callback(node_type, int(addr), data),
 
         
         self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start_date>)&end=(?P<end_date>)", ".body", update_wrapper
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start= 1734987600&end=1734991200", ".body", update_wrapper
         )    
 
     def subscribe_to_node_status(
@@ -238,3 +238,4 @@ class UpdateManager(object):
                 matched = True
         if not matched:
             _LOGGER.debug("No matches for update %s", data)
+
