@@ -179,11 +179,14 @@ class UpdateManager(object):
 
         def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
             _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr}, Data: {data}")
+              
+            start = str(round(time.time() - time.time() % 3600) - 3600)
+            end = str(round(time.time() % 3600) + 1800)
             callback(node_type, int(addr), data),
 
         
         self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start= 1734987600&end=1734991200", ".body", update_wrapper
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&=(?P<end>)", ".body", update_wrapper
         )    
 
     def subscribe_to_node_status(
