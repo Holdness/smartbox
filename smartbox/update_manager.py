@@ -167,6 +167,8 @@ class UpdateManager(object):
     #        callback(data["type"], int(data["addr"]), data["samples"]),
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
+                 for item in data:
+                    _LOGGER.debug(f"Dev Data: Items: {item} Keys: {item}")
                  callback(data["type"], int(data["addr"]), data["samples"]),
 
         self.subscribe_to_dev_data(
@@ -184,7 +186,7 @@ class UpdateManager(object):
 
         
         self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&=(?P<end>)", ".body", update_wrapper
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=1735066800&end=1735070400", ".body", update_wrapper
         )    
 
     def subscribe_to_node_status(
