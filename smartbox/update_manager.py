@@ -133,6 +133,7 @@ class UpdateManager(object):
         Named groups in path_regex are passed as kwargs to callback.
         """
         _LOGGER.debug(f"Subscribe to updates: path_regex: {path_regex} , jq_expr: {jq_expr}, callback: {callback}")
+        
         sub = UpdateSubscription(path_regex, jq_expr, callback)
         self._update_subscriptions.append(sub)
 
@@ -154,36 +155,34 @@ class UpdateManager(object):
             ".body.power_limit",
             lambda p: callback(int(p)),
         )
-        
             
-    def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, str,str, Dict[str, Any]], None]
+    def subscribe_to_node_samples(self, callback: Callable[[str, int, str,str], None]
     ) -> None:
         """Subscribe to node samples updates."""
         
-        start = str(round(time.time() - time.time() % 3600) - 3600)
+        start = str(round(time.time() - time.time() % 3600) - 3600) 
         end = str(round(time.time() - time.time()  % 3600) + 1800)
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
-
+    
     #    def dev_data_wrapper(data: Dict[str, Any]) -> None:
     #        callback(data["type"], int(data["addr"]), data["samples"]),
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
                 
-                 _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Samples: {data["samples"]}, Start: {start} , End: {end} ")
+            _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end} ")
 
-                 callback(data["type"], int(data["addr"]), start, end, data["samples"])
+            callback(data["type"], int(data["addr"]), start, end)
 
         self.subscribe_to_dev_data(
-            "(.nodes[] | {addr, type, start, end, samples})?", dev_data_wrapper)
+            "(.samples | {addr, type, start, end, samples})?", dev_data_wrapper)
         
     #    self.subscribe_to_dev_data(
     #        "(.nodes[])?", dev_data_wrapper)
 
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str, start: str, end: str) -> None:
-            _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr},  Data: {data}, Start: {start} , End: {end}")
-             
-            callback(node_type, int(addr), start, end, data)
+        def update_wrapper(node_type: str, addr: str, start: str, end: str) -> None:
+     #       _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr},  Data: {data}, Start: {start} , End: {end}")
+     #        
+           callback(node_type, int(addr), start, end)
 
         
         self.subscribe_to_updates(            
@@ -233,6 +232,7 @@ class UpdateManager(object):
             sub.match(data)
 
     def _update_cb(self, data: Dict[str, Any]) -> None:
+        
         matched = False
         for sub in self._update_subscriptions:
             if "path" not in data:
