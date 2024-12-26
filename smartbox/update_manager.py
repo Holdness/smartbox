@@ -180,7 +180,7 @@ class UpdateManager(object):
     #        "(.nodes[])?", dev_data_wrapper)
 
         def update_wrapper(node_type: str, addr: str, start: str, end: str) -> None:
-           _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr},  Data: {data}, Start: {start} , End: {end}")
+           _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr}, Start: {start} , End: {end}")
      #        
            callback(node_type, int(addr), start, end)
 
