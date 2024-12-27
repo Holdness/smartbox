@@ -161,8 +161,8 @@ class UpdateManager(object):
     ) -> None:
         """Subscribe to node samples updates."""
 
-        def dev_data_wrapper(data: Dict[str, Any]) -> None:
-            callback(data["type"], int(data["addr"]), data["samples"]),
+        async def dev_data_wrapper(data: Dict[str, Any]) -> None:
+            await callback(data["type"], int(data["addr"]), data["samples"]),
 
         self.subscribe_to_dev_data(
             "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
