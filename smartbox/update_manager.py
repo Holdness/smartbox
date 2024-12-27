@@ -172,7 +172,7 @@ class UpdateManager(object):
             callback(node_type, int(addr), data),
 
         self.subscribe_to_updates(
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples", ".body", update_wrapper
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples/start=" + str(round(time.time() - time.time() % 3600) - 3600) + "&end=" + str(round(time.time() - time.time()  % 3600) + 1800), ".body", update_wrapper
         )
 
     def subscribe_to_node_status(
@@ -193,7 +193,7 @@ class UpdateManager(object):
             callback(node_type, int(addr), data),
 
         self.subscribe_to_updates(
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/status/start=" + str(round(time.time() - time.time() % 3600) - 3600) + "&end=" + str(round(time.time() - time.time()  % 3600) + 1800), ".body", update_wrapper
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/status", ".body", update_wrapper
         )
 
     def subscribe_to_node_setup(
