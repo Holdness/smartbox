@@ -156,7 +156,8 @@ class UpdateManager(object):
             lambda p: callback(int(p)),
         )
             
-    def subscribe_to_node_samples(self, callback: Callable[[str, int, str,str], None]
+    def subscribe_to_node_samples(
+        self, callback: Callable[[str, int, str,str, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node samples updates."""
         
@@ -169,9 +170,9 @@ class UpdateManager(object):
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
                 
-            _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end} ")
+            _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Samples: {data["samples"]}, Start: {start} , End: {end} ")
 
-            callback(data["type"], int(data["addr"]), start, end)
+            callback(data["type"], int(data["addr"]), start, end, data["samples"])
 
         self.subscribe_to_dev_data(
             "(.nodes[] | {addr, type, start, end, samples})?", dev_data_wrapper)
@@ -179,10 +180,10 @@ class UpdateManager(object):
     #    self.subscribe_to_dev_data(
     #        "(.nodes[])?", dev_data_wrapper)
 
-        def update_wrapper(node_type: str, addr: str, start: str, end: str) -> None:
-           _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr}, Start: {start} , End: {end}")
+        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str, start: str, end: str) -> None:
+           _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr},  Data: {data}, Start: {start} , End: {end}")
      #        
-           callback(node_type, int(addr), start, end)
+    #        callback(node_type, int(addr), start, end, data)
 
         
         self.subscribe_to_updates(            
