@@ -163,6 +163,7 @@ class UpdateManager(object):
         """Subscribe to node samples updates."""
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
+            _LOGGER.debug(f"Samples: {data["samples"]}")
             callback(data["type"], int(data["addr"]), data["samples"]),
 
         self.subscribe_to_dev_data(
