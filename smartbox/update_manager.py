@@ -157,38 +157,30 @@ class UpdateManager(object):
         )
             
     def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, str,str, Dict[str, Any]], None]
+        self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node samples updates."""
-        
-        start = str(round(time.time() - time.time() % 3600) - 3600) 
-        end = str(round(time.time() - time.time()  % 3600) + 1800)
-        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
-    
-        def dev_data_wrapper(data: Dict[str, Any]) -> None:
-                
-            _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Samples: {data["samples"]}, Start: {start} , End: {end} ")
 
-            callback(data["type"], int(data["addr"]), start, end, data["samples"])
+        def dev_data_wrapper(data: Dict[str, Any]) -> None:
+            callback(data["type"], int(data["addr"]), data["samples"]),
 
         self.subscribe_to_dev_data(
-            "(.nodes[] | {addr, type, start, end, samples})?", dev_data_wrapper)
-        
+            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
+        )
 
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str, start: str, end: str) -> None:
-           _LOGGER.debug(f"Update Wrapper : Node Type: {node_type}, Addr: {addr},  Data: {data}, Start: {start} , End: {end}")
-      
-           callback(node_type, int(addr), start, end, data)
+        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
+            callback(node_type, int(addr), data),
 
-        
-        self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&end=(?P<end>)", ".body", update_wrapper
-        )    
+        self.subscribe_to_updates(
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples", ".body", update_wrapper
+        )
 
     def subscribe_to_node_status(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node status updates."""
+        
+        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
             callback(data["type"], int(data["addr"]), data["status"]),
