@@ -6,6 +6,7 @@ import logging
 import re
 from typing import Any, Callable, Dict, Iterable, List
 import time
+import asyncio
 
 from .session import Session
 from .socket import SocketSession
@@ -59,11 +60,11 @@ class DevDataSubscription(object):
     def match(self, input_data: Dict[str, Any]) -> None:
         """Return matches for this subscription for the given dev data."""
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
-
+        _LOGGER.debug(f"Input_data: {input_data}")
         try:
             for match in self._jq_matcher.match(input_data):
                 if match is not None:
-                    self._callback(match)
+                  (self._callback(match))
         except ValueError:
             _LOGGER.exception("Error evaluating jq on dev data %s", input_data)
 
