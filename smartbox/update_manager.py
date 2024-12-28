@@ -104,8 +104,8 @@ class UpdateSubscription(object):
 
 class UpdateManager(object):
     """Manages subscription callbacks to receive updates from a Smartbox socket."""
-
     def __init__(self, session: Session, device_id: str, **kwargs):
+        _LOGGER.debug(f"Update Manager session: {session}")
         """Create an UpdateManager for a smartbox socket."""
         self._socket_session = SocketSession(
             session, device_id, self._dev_data_cb, self._update_cb, **kwargs
@@ -163,9 +163,9 @@ class UpdateManager(object):
         self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node samples updates."""
-
+        
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
-            _LOGGER.debug(f"Samples: {data["samples"]}")
+            _LOGGER.debug(f"Samples: {data["samples"]}, Type: {data["type"]}, Addr: {data["addr"]}")
             callback(data["type"], int(data["addr"]), data["samples"]),
 
         self.subscribe_to_dev_data(
