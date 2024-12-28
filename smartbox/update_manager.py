@@ -53,7 +53,7 @@ class OptimisedJQMatcher(object):
 
 class DevDataSubscription(object):
     """Subscription for dev data callbacks."""
-    _LOGGER.debug(f"Match Object Name: {object.__name__}")
+
     def __init__(self, jq_expr: str, callback: Callable[[Dict[str, Any]], None]):
         """Create a dev data subscription for the given jq expression."""
         self._jq_matcher = OptimisedJQMatcher(jq_expr)
@@ -92,7 +92,6 @@ class UpdateSubscription(object):
         matched = False
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
         _LOGGER.debug(f"Input Data: {input_data}")
-
         try:
             for data_match in self._jq_matcher.match(input_data):
                 if data_match is not None:
