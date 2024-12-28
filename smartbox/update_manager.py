@@ -20,7 +20,6 @@ class OptimisedJQMatcher(object):
     """jq matcher that doesn't bother with jq for simple one-level element queries."""
 
     def __init__(self, jq_expr: str):
-        _LOGGER.debug(f"__init__ {self._compiled_jq}")
         """Create an OptimisedJQMatcher for any jq expression."""
         m = _SIMPLE_JQ_RE.match(jq_expr)
         self._fast_path = False
@@ -53,7 +52,7 @@ class OptimisedJQMatcher(object):
 
 class DevDataSubscription(object):
     """Subscription for dev data callbacks."""
-
+    _LOGGER.debug(f"{object.__name__}")
     def __init__(self, jq_expr: str, callback: Callable[[Dict[str, Any]], None]):
         """Create a dev data subscription for the given jq expression."""
         self._jq_matcher = OptimisedJQMatcher(jq_expr)
@@ -92,6 +91,7 @@ class UpdateSubscription(object):
         matched = False
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
         _LOGGER.debug(f"Input Data: {input_data}")
+
         try:
             for data_match in self._jq_matcher.match(input_data):
                 if data_match is not None:
