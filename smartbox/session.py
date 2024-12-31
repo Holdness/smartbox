@@ -223,5 +223,5 @@ class Session(object):
             return {}
         else :
             return self._api_request(
-                f"devs/{device_id}/{node['type']}/{node['addr']/samples?start={str(start_date)}&end={str(end_date)}"
+                f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={str(start_date)}&end={str(end_date)}"
         )
