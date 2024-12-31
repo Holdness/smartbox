@@ -20,6 +20,7 @@ class OptimisedJQMatcher(object):
     """jq matcher that doesn't bother with jq for simple one-level element queries."""
 
     def __init__(self, jq_expr: str):
+        _LOGGER.debug("OptimisedJQMatcher(object)")
         """Create an OptimisedJQMatcher for any jq expression."""
         m = _SIMPLE_JQ_RE.match(jq_expr)
         self._fast_path = False
@@ -30,6 +31,7 @@ class OptimisedJQMatcher(object):
             self._compiled_jq = jq.compile(jq_expr)
 
     def match(self, input_data: Dict[str, Any]) -> Iterable:
+        _LOGGER.debug("OptimisedJQMatcher(object) - Match")
         """Return matches for the given dev data."""
         if self._fast_path:
             return [input_data.get(self._simple_elem)]
@@ -37,13 +39,14 @@ class OptimisedJQMatcher(object):
             return self._compiled_jq.input(input_data)
 
     def __repr__(self) -> str:
-        
+        _LOGGER.debug("OptimisedJQMatcher(object) - __repr")
         if self._fast_path:
             return str(self)
         else:
             return repr(self._compiled_jq)
 
     def __str__(self) -> str:
+        _LOGGER.debug("OptimisedJQMatcher(object) - __str")
         if self._fast_path:
             return f"OptimisedJQMatcher('.{self._simple_elem}', fast_path=True)"
         else:
@@ -54,11 +57,13 @@ class DevDataSubscription(object):
     """Subscription for dev data callbacks."""
     
     def __init__(self, jq_expr: str, callback: Callable[[Dict[str, Any]], None]):
+        _LOGGER.debug("DevDataSubscription(object)")
         """Create a dev data subscription for the given jq expression."""
         self._jq_matcher = OptimisedJQMatcher(jq_expr)
         self._callback = callback
 
     def match(self, input_data: Dict[str, Any]) -> None:
+        _LOGGER.debug("DevDataSubscription(object) - Match")
         """Return matches for this subscription for the given dev data."""
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
         _LOGGER.debug(f"Input_data: {input_data}")
@@ -72,7 +77,7 @@ class DevDataSubscription(object):
 
 class UpdateSubscription(object):
     """Subscription for updates."""
-
+    _LOGGER.debug("UpdateSubscription(object)")
     def __init__(
         self, path_regex: str, jq_expr: str, callback: Callable[[Dict[str, Any]], None]
     ):
@@ -83,6 +88,7 @@ class UpdateSubscription(object):
         self._callback = callback
 
     def match(self, input_data: Dict[str, Any]) -> bool:
+        _LOGGER.debug("UpdateSubscription(object) - Match")
         """Return matches for this subscription for the given update."""
         path_match = self._path_regex.search(input_data["path"])
         if not path_match:
@@ -103,6 +109,7 @@ class UpdateSubscription(object):
 
 
 class UpdateManager(object):
+    _LOGGER.debug("UpdateManager(object)")
     """Manages subscription callbacks to receive updates from a Smartbox socket."""
     def __init__(self, session: Session, device_id: str, **kwargs):
         _LOGGER.debug(f"Update Manager session: {session}")
@@ -120,10 +127,12 @@ class UpdateManager(object):
         return self._socket_session
 
     async def run(self) -> None:
+        _LOGGER.debug("UpdateManager(object) - Run")
         """Run the socket session asynchronously, waiting for updates."""
         await self._socket_session.run()
 
     def subscribe_to_dev_data(self, jq_expr: str, callback: Callable) -> None:
+        _LOGGER.debug("UpdateManager(object) - subscribe to Dev Data")
         """Subscribe to receive device data."""
         _LOGGER.debug(f"Subscribe to dev data:  self: {self}, jq_expr: {jq_expr}, callback: {callback} , ")
         sub = DevDataSubscription(jq_expr, callback)
@@ -132,6 +141,7 @@ class UpdateManager(object):
     def subscribe_to_updates(
         self, path_regex: str, jq_expr: str, callback: Callable[..., None]
     ) -> None:
+        _LOGGER.debug("UpdateManager(object) - subscribe to updates")
         """Subscribe to receive device and node data updates.
 
         Named groups in path_regex are passed as kwargs to callback.
@@ -144,12 +154,14 @@ class UpdateManager(object):
     def subscribe_to_device_away_status(
         self, callback: Callable[[Dict[str, Any]], None]
     ) -> None:
+        _LOGGER.debug("UpdateManager(object) - subscribe to device away status")
         """Subscribe to device away status updates."""
         self.subscribe_to_dev_data(".away_status", callback)
         self.subscribe_to_updates(r"^/mgr/away_status", ".body", callback)
         
  
     def subscribe_to_device_power_limit(self, callback: Callable[[int], None]) -> None:
+        _LOGGER.debug("UpdateManager(object) - Subscribe to device power limit")
         """Subscribe to device power limit updates."""
         self.subscribe_to_dev_data(
             ".htr_system.setup.power_limit", lambda p: callback(int(p))
@@ -163,6 +175,7 @@ class UpdateManager(object):
     def subscribe_to_node_samples(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
+        
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
         """Subscribe to node samples updates."""
         
@@ -205,6 +218,7 @@ class UpdateManager(object):
     def subscribe_to_node_setup(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
+        _LOGGER.debug("UpdateManager(object) - subscribe to node setup")
         """Subscribe to node setup updates."""
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
@@ -222,11 +236,12 @@ class UpdateManager(object):
         )
 
     def _dev_data_cb(self, data: Dict[str, Any]) -> None:
+        _LOGGER.debug("UpdateManager(object) - dev data cb")
         for sub in self._dev_data_subscriptions:
             sub.match(data)
 
     def _update_cb(self, data: Dict[str, Any]) -> None:
-        
+        _LOGGER.debug("UpdateManager(object) - Update_cb")        
         matched = False
         for sub in self._update_subscriptions:
             if "path" not in data:
