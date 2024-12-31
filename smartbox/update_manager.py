@@ -31,7 +31,9 @@ class OptimisedJQMatcher(object):
             self._compiled_jq = jq.compile(jq_expr)
 
     def match(self, input_data: Dict[str, Any]) -> Iterable:
+
         _LOGGER.debug("OptimisedJQMatcher(object) - Match")
+        _LOGGER.debug(f"Data: {input_data}")
         """Return matches for the given dev data."""
         if self._fast_path:
             return [input_data.get(self._simple_elem)]
@@ -89,6 +91,7 @@ class UpdateSubscription(object):
 
     def match(self, input_data: Dict[str, Any]) -> bool:
         _LOGGER.debug("UpdateSubscription(object) - Match")
+        _LOGGER.debug(f"Data: {input_data}")
         """Return matches for this subscription for the given update."""
         path_match = self._path_regex.search(input_data["path"])
         if not path_match:
@@ -117,7 +120,7 @@ class UpdateManager(object):
         self._socket_session = SocketSession(
             session, device_id, self._dev_data_cb, self._update_cb, **kwargs
         )
-       
+        _LOGGER.debug(f"Socket Session: {self._socket_session}") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         self._update_subscriptions: List[UpdateSubscription] = []
 
