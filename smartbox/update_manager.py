@@ -120,7 +120,7 @@ class UpdateManager(object):
         self._socket_session = SocketSession(
             session, device_id, self._dev_data_cb, self._update_cb, **kwargs
         )
-        _LOGGER.debug(f"Socket Session: {self._socket_session}") 
+        _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         self._update_subscriptions: List[UpdateSubscription] = []
 
