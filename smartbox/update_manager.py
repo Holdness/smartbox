@@ -93,6 +93,7 @@ class UpdateSubscription(object):
         _LOGGER.debug("UpdateSubscription(object) - Match")
         _LOGGER.debug(f"Data: {input_data}")
         """Return matches for this subscription for the given update."""
+
         path_match = self._path_regex.search(input_data["path"])
         if not path_match:
             return False
@@ -175,27 +176,6 @@ class UpdateManager(object):
             lambda p: callback(int(p)),
         )
             
-    def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, Dict[str, Any]], None]
-    ) -> None:
-        
-        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
-        """Subscribe to node samples updates."""
-        
-        def dev_data_wrapper(data: Dict[str, Any]) -> None:
-            _LOGGER.debug(f"Samples: {data["samples"]}, Type: {data["type"]}, Addr: {data["addr"]}")
-            callback(data["type"], int(data["addr"]), data["samples"]),
-
-        self.subscribe_to_dev_data(
-            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
-        )
-
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
-            callback(node_type, int(addr), data),
-
-        self.subscribe_to_updates(
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples/start=" + str(round(time.time() - time.time() % 3600) - 3600) + "&end=" + str(round(time.time() - time.time()  % 3600) + 1800), ".body", update_wrapper
-        )
 
     def subscribe_to_node_status(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
