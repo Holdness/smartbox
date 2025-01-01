@@ -218,7 +218,7 @@ class Session(object):
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
     def get_device_samples(self, device_id: str, node: Dict[str, Any], start_date: int, end_date: int, current_start_date: int ) -> Dict[str, Any]:
-        _LOGGER.debug(f"Get_Device_Samples_Node: {node_type}")
+        _LOGGER.debug(f"Get_Device_Samples_Node: node['type']")
         if (start_date == current_start_date) :
             return {}
         else :
