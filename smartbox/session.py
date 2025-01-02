@@ -2,8 +2,9 @@ import datetime
 import json
 import logging
 import requests
+import aiohttp
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+#from requests.packages.urllib3.util.retry import Retry
 from typing import Any, Dict, List
 
 from .error import SmartboxError
