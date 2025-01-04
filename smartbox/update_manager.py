@@ -179,7 +179,7 @@ class UpdateManager(object):
             
 
     def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, str,str, None]
+        self, callback: Callable[[str, int, str,str], None]
     ) -> None:
         """Subscribe to node samples updates."""
         
