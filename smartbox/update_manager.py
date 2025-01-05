@@ -183,7 +183,7 @@ class UpdateManager(object):
     ) -> None:
         """Subscribe to node samples updates."""
         
-        start = str(round(time.time() - time.time() % 3600) - 3600) 
+        start = str(round(time.time() - time.time() % 3600) - 3600) samples
         end = str(round(time.time() - time.time()  % 3600) + 1800)
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
     
@@ -191,7 +191,7 @@ class UpdateManager(object):
                 
             _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end} ")
 
-            callback(data["type"], data["addr"], start, end, data["samples"]),
+            callback(node_type, addr, start, end, data[""]),
 
         self.subscribe_to_dev_data(
             "(.samples | {addr, type})?", dev_data_wrapper)
