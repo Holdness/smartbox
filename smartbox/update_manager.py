@@ -183,7 +183,7 @@ class UpdateManager(object):
     ) -> None:
         """Subscribe to node samples updates."""
         
-        start = str(round(time.time() - time.time() % 3600) - 3600) samples
+        start = str(round(time.time() - time.time() % 3600) - 3600)
         end = str(round(time.time() - time.time()  % 3600) + 1800)
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
     
