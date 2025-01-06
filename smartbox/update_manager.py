@@ -7,6 +7,7 @@ import logging
 import re
 from typing import Any, Callable, Dict, Iterable, List
 import time
+            _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end}, Data: {data} ")
 
 
 from .session import Session
