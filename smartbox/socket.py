@@ -106,8 +106,7 @@ class SocketSession(object):
             session, _API_V2_NAMESPACE, dev_data_callback, node_update_callback
         )
         _LOGGER.debug(f"Dev Data Callback: {dev_data_callback}, Node Ipdate callback: {node_update_callback}")
-        for item in session:
-            _LOGGER.debug(f"Session Item: {item}")
+        _LOGGER.debug(f"Session Item: {session}")
         self._sio.register_namespace(self._api_v2_ns)
 
         @self._sio.event
