@@ -7,7 +7,6 @@ import logging
 import re
 from typing import Any, Callable, Dict, Iterable, List
 import time
-            _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end}, Data: {data} ")
 
 
 from .session import Session
@@ -190,12 +189,12 @@ class UpdateManager(object):
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
-                
-            _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end}, Data: {data} ")
-
+            
             for item in data:
                 _LOGGER.debug(f"Data in subscribe_to_node_samples: {item}")
                 
+            _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end}, Data: {data} ")
+               
             callback(data["type"], data["addr"], start, end, data),
 
         self.subscribe_to_dev_data(
@@ -219,6 +218,8 @@ class UpdateManager(object):
         _LOGGER.debug(f"Subscribe to node status: Self: {self}, Callback: {callback}")
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
+            _LOGGER.debug(f"Dev Data Wrapper Status: Type: {data["type"]} , Addr: {data["addr"]}, Data: {data} ")
+            
             callback(data["type"], int(data["addr"]), data["status"]),
 
         self.subscribe_to_dev_data(
