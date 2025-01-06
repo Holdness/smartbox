@@ -193,7 +193,7 @@ class UpdateManager(object):
             _LOGGER.debug(f"Dev Data Wrapper: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end}, Data: {data} ")
 
             for item in data:
-                _LOGGER.debug(f"Data in subscribe_to_node_samples:" {item})
+                _LOGGER.debug(f"Data in subscribe_to_node_samples: {item}")
                 
             callback(data["type"], data["addr"], start, end, data),
 
