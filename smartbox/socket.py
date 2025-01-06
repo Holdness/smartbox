@@ -35,6 +35,7 @@ class SmartboxAPIV2Namespace(socketio.AsyncClientNamespace):
 
     def on_connect(self) -> None:
         _LOGGER.debug(f"Namespace {self._namespace} connected")
+        _LOGGER.debug(f"On Connect:")
         self._namespace_connected = True
 
     async def on_disconnect(self) -> None:
@@ -100,10 +101,13 @@ class SocketSession(object):
             logging.getLogger("socketio").setLevel(logging.ERROR)
             logging.getLogger("engineio").setLevel(logging.ERROR)
             self._sio = socketio.AsyncClient()
-
+    
         self._api_v2_ns = SmartboxAPIV2Namespace(
             session, _API_V2_NAMESPACE, dev_data_callback, node_update_callback
         )
+        _LOGGER.debug(f"Dev Data Callback: {dev_data_callback}, Node Ipdate callback: {node_update_callback}")
+        for item in session:
+            _LOGGER.debug(f"Session Item: {item}")
         self._sio.register_namespace(self._api_v2_ns)
 
         @self._sio.event
