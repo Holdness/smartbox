@@ -56,6 +56,7 @@ class OptimisedJQMatcher(object):
             return str(self._compiled_jq)
 
 
+
 class DevDataSubscription(object):
     """Subscription for dev data callbacks."""
     
