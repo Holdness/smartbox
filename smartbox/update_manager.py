@@ -250,12 +250,14 @@ class UpdateManager(object):
     def _dev_data_cb(self, data: Dict[str, Any]) -> None:
         _LOGGER.debug("UpdateManager(object) - dev data cb")
         for sub in self._dev_data_subscriptions:
+            _LOGGER.debug(f"Dev Data CB: {data}")
             sub.match(data)
 
     def _update_cb(self, data: Dict[str, Any]) -> None:
         _LOGGER.debug("UpdateManager(object) - Update_cb")        
         matched = False
         for sub in self._update_subscriptions:
+            _LOGGER.debug(f"Update CB: {data}")
             if "path" not in data:
                 _LOGGER.error("Path not found in update data: %s", data)
                 continue
