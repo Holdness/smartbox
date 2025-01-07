@@ -221,6 +221,6 @@ class Session(object):
     def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str, Any]:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         return self._api_request(
-        f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start=({int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}"
+        f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}"
         )
         
