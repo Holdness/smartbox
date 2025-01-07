@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import requests
+import time
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from typing import Any, Dict, List
@@ -217,8 +218,9 @@ class Session(object):
         data = {"power_limit": str(power_limit)}
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
-    def get_device_samples(self, device_id: str, node: Dict[str, Any], start_date: int, end_date: int) -> Dict[str, Any]:
+    def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str, Any]:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         return self._api_request(
-        f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={str(start_date)}&end={str(end_date)}"
+        f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start=({int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}"
         )
+        
