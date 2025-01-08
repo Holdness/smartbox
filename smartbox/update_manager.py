@@ -149,6 +149,7 @@ class UpdateManager(object):
         """Subscribe to receive device data."""
         _LOGGER.debug(f"Subscribe to dev data:  self: {self}, jq_expr: {jq_expr}, callback: {callback} , ")
         sub = DevDataSubscription(jq_expr, callback)
+        _LOGGER.debug(f"Sub: {sub}")
         self._dev_data_subscriptions.append(sub)
 
     def subscribe_to_updates(
