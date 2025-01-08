@@ -168,7 +168,7 @@ class UpdateManager(object):
     def subscribe_to_device_away_status(
         self, callback: Callable[[Dict[str, Any]], None]
     ) -> None:
-        _LOGGER.debug(f"UpdateManager(object) - subscribe to device away status {callable.__dict__}")
+        _LOGGER.debug(f"UpdateManager(object) - subscribe to device away status {callback.__dict__}")
         """Subscribe to device away status updates."""
         self.subscribe_to_dev_data(".away_status", callback)
         self.subscribe_to_updates(r"^/mgr/away_status", ".body", callback)
