@@ -127,7 +127,11 @@ class UpdateManager(object):
         )
         _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
+        for item in self._dev_data_subscriptions:
+            _LOGGER.debug(f"dev_data_subscriptions: {item}")
         self._update_subscriptions: List[UpdateSubscription] = []
+        for item in self._update_subscriptions:
+            _LOGGER.debug(f"update_subscriptions: {item}")
 
     @property
     def socket_session(self) -> SocketSession:
