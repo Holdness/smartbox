@@ -101,6 +101,7 @@ class UpdateSubscription(object):
         if not path_match:
             return False
         path_match_kwargs = path_match.groupdict()
+        _LOGGER.debug(f"Kwargs Update Subscription: {path_match_kwargs}")
         matched = False
         _LOGGER.debug("Matching jq %s", self._jq_matcher)
         _LOGGER.debug(f"Input Data: {input_data}")
