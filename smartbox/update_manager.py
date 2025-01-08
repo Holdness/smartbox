@@ -62,7 +62,8 @@ class DevDataSubscription(object):
     """Subscription for dev data callbacks."""
     
     def __init__(self, jq_expr: str, callback: Callable[[Dict[str, Any]], None]):
-        _LOGGER.debug("DevDataSubscription(object)")
+    
+        _LOGGER.debug("DevDataSubscription(object) {object}")
         """Create a dev data subscription for the given jq expression."""
         self._jq_matcher = OptimisedJQMatcher(jq_expr)
         self._callback = callback
