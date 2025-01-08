@@ -119,7 +119,7 @@ class UpdateManager(object):
     _LOGGER.debug("UpdateManager(object)")
     """Manages subscription callbacks to receive updates from a Smartbox socket."""
     def __init__(self, session: Session, device_id: str, **kwargs):
-         _LOGGER.debug(f"Update manager kwargs: {kwargs}")
+        _LOGGER.debug(f"Update manager kwargs: {kwargs}")
         """Create an UpdateManager for a smartbox socket."""
         self._socket_session = SocketSession(
             session, device_id, self._dev_data_cb, self._update_cb, **kwargs
