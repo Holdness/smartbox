@@ -149,7 +149,7 @@ class UpdateManager(object):
         """Subscribe to receive device data."""
         _LOGGER.debug(f"Subscribe to dev data:  self: {self}, jq_expr: {jq_expr}, callback: {callback} , ")
         sub = DevDataSubscription(jq_expr, callback)
-        _LOGGER.debug(f"Sub: {sub}")
+        _LOGGER.debug(f"Sub: {sub.__str__}")
         self._dev_data_subscriptions.append(sub)
 
     def subscribe_to_updates(
@@ -168,7 +168,7 @@ class UpdateManager(object):
     def subscribe_to_device_away_status(
         self, callback: Callable[[Dict[str, Any]], None]
     ) -> None:
-        _LOGGER.debug(f"UpdateManager(object) - subscribe to device away status {callback.__dict__}")
+        _LOGGER.debug(f"UpdateManager(object) - subscribe to device away status {callback.__str__}")
         """Subscribe to device away status updates."""
         self.subscribe_to_dev_data(".away_status", callback)
         self.subscribe_to_updates(r"^/mgr/away_status", ".body", callback)
