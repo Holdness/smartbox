@@ -231,6 +231,7 @@ class UpdateManager(object):
         )
 
         def update_wrapper(data: Dict[str, Any], node_type: str, addr: str) -> None:
+            _LOGGER.debug(f"Dev Data Wrapper Status: Data: {data} ")
             callback(node_type, int(addr), data),
 
         self.subscribe_to_updates(
