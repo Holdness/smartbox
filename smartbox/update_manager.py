@@ -1,5 +1,6 @@
 
 
+
 """Smartbox socket update manager."""
 
 import jq
@@ -190,17 +191,17 @@ class UpdateManager(object):
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
               
-            _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Start: {start} , End: {end}, Data: {data} ")
+            _LOGGER.debug(f"Dev Data Wrapper Samples: Data: {data} ")
                
-            callback(data["type"], data["addr"], start, end, data["samples"]),
+            callback(data["type"], data["addr"], data["samples"]),
 
         self.subscribe_to_dev_data(
-            "(.nodes[] | {addr, type, samples, start, end})?", dev_data_wrapper)
+            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper)
         
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: int, start: str, end: str) -> None:
-           _LOGGER.debug(f"Update Wrapper : Data: {data}, Node Type: {type}, Addr: {addr}, Start: {start} , End: {end}")
+        def update_wrapper(data: Dict[str, Any], node_type: str, addr: int) -> None:
+           _LOGGER.debug(f"Update Wrapper : Data: {data}, Node Type: {type}, Addr: {addr}")
       
-           callback(node_type, addr, start, end, data),
+           callback(node_type, addr, data),
        
         self.subscribe_to_updates(            
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&end=(?P<end>)", ".body", update_wrapper
