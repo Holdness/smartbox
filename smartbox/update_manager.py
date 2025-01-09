@@ -63,7 +63,7 @@ class DevDataSubscription(object):
     
     def __init__(self, jq_expr: str, callback: Callable[[Dict[str, Any]], None]):
     
-        _LOGGER.debug(f"DevDataSubscription(object) {object.__dict__}")
+        _LOGGER.debug(f"DevDataSubscription(object) {jq_expr},{callback.__str__}")
         """Create a dev data subscription for the given jq expression."""
         self._jq_matcher = OptimisedJQMatcher(jq_expr)
         self._callback = callback
@@ -126,7 +126,7 @@ class UpdateManager(object):
         self._socket_session = SocketSession(
             session, device_id, self._dev_data_cb, self._update_cb, **kwargs
         )
-        _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb.__str__} Update: {self._update_cb.__str__} ") 
+        _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
             _LOGGER.debug(f"dev_data_subscriptions: {item}")
