@@ -126,7 +126,7 @@ class UpdateManager(object):
         self._socket_session = SocketSession(
             session, device_id, self._dev_data_cb, self._update_cb, **kwargs
         )
-        _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
+        _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb.__str__} Update: {self._update_cb.__str__} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
             _LOGGER.debug(f"dev_data_subscriptions: {item}")
@@ -149,7 +149,7 @@ class UpdateManager(object):
         """Subscribe to receive device data."""
         _LOGGER.debug(f"Subscribe to dev data:  self: {self}, jq_expr: {jq_expr}, callback: {callback} , ")
         sub = DevDataSubscription(jq_expr, callback)
-        _LOGGER.debug(f"Sub: {sub.__str__}")
+        _LOGGER.debug(f"Sub: {sub.match.__str__}")
         self._dev_data_subscriptions.append(sub)
 
     def subscribe_to_updates(
