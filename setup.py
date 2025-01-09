@@ -22,6 +22,7 @@ setup(
     install_requires=[
         'aiohttp',
         'Click',
+        'jq',
         # python-socketio major version needs to be synchronised with the
         # server socket.io version (socket.io has incompatible protocol
         # changes between major versions)
