@@ -53,6 +53,11 @@ class SmartboxAPIV2Namespace(socketio.AsyncClientNamespace):
 
     async def on_dev_data(self, data: Dict[str, Any]) -> None:
         _LOGGER.debug(f"Received dev_data: {data}")
+        samples_data: Dict[str, Any] = {}
+        session_nodes = self._session.get_nodes(self.dev_id)
+        for node_info in session_nodes:
+                    samples_data.update = self._session.get_device_samples(self._dev_id, node_info)
+        _LOGGER.debug(f"Samples: {samples_data}")
         self._received_message = True
         self._received_dev_data = True
         if self._dev_data_callback is not None:
