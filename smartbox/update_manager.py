@@ -194,18 +194,18 @@ class UpdateManager(object):
         
         start = str(round(time.time() - time.time() % 3600) - 3600)
         end = str(round(time.time() - time.time()  % 3600) + 1800)
-        temp = "samples?start=" + start + "&end=" + end
+
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
     
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
               
             _LOGGER.debug(f"Dev Data Wrapper Samples: Data: {data} ")
                          
-            callback(data["type"], data["addr"], data["samples"]),
+            callback(data["type"], data["addr"], data[])
 
         self.subscribe_to_dev_data(
             
-            "(.nodes[] | {addr, type, " + temp + "})?", dev_data_wrapper)
+            "(.nodes[] | {addr, type})?", dev_data_wrapper)
         
         def update_wrapper(data: Dict[str, Any], node_type: str, addr: int) -> None:
            _LOGGER.debug(f"Update Wrapper : Data: {data}, Node Type: {type}, Addr: {addr}")
