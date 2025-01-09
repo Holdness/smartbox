@@ -110,6 +110,7 @@ class Session(object):
     def _api_request(self, path: str) -> Any:
         self._check_refresh()
         api_url = f"{self._api_host}/api/v2/{path}"
+        _LOGGER.debug(f"API Call: {api_url}")
         response = self._requests.get(api_url, headers=self._get_headers())
         response.raise_for_status()
         return response.json()
