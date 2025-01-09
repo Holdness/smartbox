@@ -5,6 +5,7 @@ import socketio
 from typing import Any, Callable, Dict, Optional
 import urllib
 
+from homeassistant.core import HomeAssistant
 from .session import Session
 
 _API_V2_NAMESPACE = "/api/v2/socket_io"
@@ -54,9 +55,9 @@ class SmartboxAPIV2Namespace(socketio.AsyncClientNamespace):
     async def on_dev_data(self, data: Dict[str, Any]) -> None:
         _LOGGER.debug(f"Received dev_data: {data}")
         samples_data: Dict[str, Any] = {}
-        session_nodes = self._session.get_nodes("12106952cb8f8c5004")
+        session_nodes = await HomeAssistant.async_add_executor_job(self._session.get_nodes("12106952cb8f8c5004"))
         for node_info in session_nodes:
-                    samples_data.update = self._session.get_device_samples("12106952cb8f8c5004", node_info)
+                    samples_data.update = await HomeAssistant.async_add_executor_job(self._session.get_device_samples("12106952cb8f8c5004", node_info))
         _LOGGER.debug(f"Samples: {samples_data}")
         self._received_message = True
         self._received_dev_data = True
