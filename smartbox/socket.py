@@ -35,7 +35,8 @@ class SmartboxAPIV2Namespace(socketio.AsyncClientNamespace):
 
     def on_connect(self) -> None:
         _LOGGER.debug(f"Namespace {self._namespace} connected")
-        _LOGGER.debug(f"On Connect:")
+        _LOGGER.debug(f"On Connect: {self._node_update_callback} + {self._received_dev_data} ")
+        
         self._namespace_connected = True
 
     async def on_disconnect(self) -> None:
@@ -137,6 +138,7 @@ class SocketSession(object):
 
     async def run(self) -> None:
         self._ping_task = self._sio.start_background_task(self._send_ping)
+    
 
         # Will loop indefinitely unless our signal handler is set and called
         self._loop_should_exit = False
