@@ -201,7 +201,7 @@ class UpdateManager(object):
               
             _LOGGER.debug(f"Dev Data Wrapper Samples: Data: {data} ")
                          
-            callback(data["type"], data["addr"], data[])
+            callback(data["type"], data["addr"], data["samples"])
 
         self.subscribe_to_dev_data(
             
