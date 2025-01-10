@@ -31,6 +31,7 @@ class OptimisedJQMatcher(object):
             self._simple_elem = m.group(1)
         else:
             self._compiled_jq = jq.compile(jq_expr)
+        
 
     def match(self, input_data: Dict[str, Any]) -> Iterable:
 
@@ -126,6 +127,7 @@ class UpdateManager(object):
         self._socket_session = SocketSession(
             session, device_id, self._dev_data_cb, self._update_cb, **kwargs
         )
+        
         _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
@@ -164,6 +166,8 @@ class UpdateManager(object):
         
         sub = UpdateSubscription(path_regex, jq_expr, callback)
         self._update_subscriptions.append(sub)
+        
+        
 
     def subscribe_to_device_away_status(
         self, callback: Callable[[Dict[str, Any]], None]
@@ -191,9 +195,9 @@ class UpdateManager(object):
         self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
         """Subscribe to node samples updates."""
+
         
-        start = str(round(time.time() - time.time() % 3600) - 3600)
-        end = str(round(time.time() - time.time()  % 3600) + 1800)
+        
 
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
     
@@ -213,6 +217,9 @@ class UpdateManager(object):
     ) -> None:
         """Subscribe to node status updates."""
         
+        start = str(round(time.time() - time.time() % 3600) - 3600)
+        end = str(round(time.time() - time.time()  % 3600) + 1800)
+        
         _LOGGER.debug(f"Subscribe to node status: Self: {self}, Callback: {callback}")
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
@@ -231,6 +238,10 @@ class UpdateManager(object):
         self.subscribe_to_updates(
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/status", ".body", update_wrapper
         )
+        
+        self.subscribe_to_updates(            
+            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&end=(?P<end>)", ".body", update_wrapper
+        ) 
 
     def subscribe_to_node_setup(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
