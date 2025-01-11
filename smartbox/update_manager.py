@@ -1,6 +1,7 @@
 
 
 
+
 """Smartbox socket update manager."""
 
 import jq
@@ -196,11 +197,19 @@ class UpdateManager(object):
     ) -> None:
         """Subscribe to node samples updates."""
 
-        
-        
-
+        start = str(round(time.time() - time.time() % 3600) - 3600)
+        end = str(round(time.time() - time.time()  % 3600) + 1800)
+     
         _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
-    
+             
+        def dev_data_wrapper(data: Dict[str, Any]) -> None:
+            _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Data: {data} ")
+            
+            callback(data["type"], int(data["addr"]), data["samples"]),
+
+        self.subscribe_to_dev_data(
+            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
+        )
        
         def update_wrapper(data: Dict[str, Any], node_type: str, addr: int) -> None:
            _LOGGER.debug(f"Update Wrapper : Data: {data}, Node Type: {type}, Addr: {addr}")
@@ -215,11 +224,8 @@ class UpdateManager(object):
     def subscribe_to_node_status(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
     ) -> None:
-        """Subscribe to node status updates."""
-        
-        start = str(round(time.time() - time.time() % 3600) - 3600)
-        end = str(round(time.time() - time.time()  % 3600) + 1800)
-        
+        """Subscribe to node status updates."""        
+       
         _LOGGER.debug(f"Subscribe to node status: Self: {self}, Callback: {callback}")
 
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
@@ -238,10 +244,7 @@ class UpdateManager(object):
         self.subscribe_to_updates(
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/status", ".body", update_wrapper
         )
-        
-        self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&end=(?P<end>)", ".body", update_wrapper
-        ) 
+
 
     def subscribe_to_node_setup(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
