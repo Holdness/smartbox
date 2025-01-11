@@ -139,9 +139,9 @@ class SocketSession(object):
 
     async def run(self) -> None:
         self._ping_task = self._sio.start_background_task(self._send_ping)
-        nodes: Dict[str,Any] = self._session.get_nodes(self._dev_id)
-            for nodex in nodes:
-                samples = self._session.get_node_samples(self._dev_id, nodex)
+        nodes: Dict[str,Any] = self._session.get_nodes(self._device_id)
+        for nodex in nodes:
+                samples = self._session.get_node_samples(self._device_id, nodex)
                 _LOGGER.debug(f"xxxxxxx Samples: {samples}")
         # Will loop indefinitely unless our signal handler is set and called
         self._loop_should_exit = False
