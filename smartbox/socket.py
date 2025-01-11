@@ -138,6 +138,10 @@ class SocketSession(object):
             await self._sio.send("ping", namespace=_API_V2_NAMESPACE)
 
     async def run(self) -> None:
+        nodes: Dict[str,Any] = self._session(self._device_id)
+        for node in nodes:
+            samples = self._session.get_node_samples(self._device_id, node )
+            _LOGGER.debug(f"Samples: {samples}")
         self._ping_task = self._sio.start_background_task(self._send_ping)
     
 
