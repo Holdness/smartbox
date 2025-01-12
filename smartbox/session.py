@@ -6,6 +6,7 @@ import time
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from typing import Any, Dict, List
+import asyncio
 
 from .error import SmartboxError
 
@@ -219,9 +220,13 @@ class Session(object):
         data = {"power_limit": str(power_limit)}
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
-    def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str, Any]:
+    async def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str, Any]:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
-        return self._api_request(
-        f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}"
-        )
+        loop = asyncio.get_running_loop()
+        api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
+        result = await loop.run_in_executor(None, self._api_request,  api_call )
+        return result 
+        
+        
+    
         
