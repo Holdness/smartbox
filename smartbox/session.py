@@ -222,10 +222,11 @@ class Session(object):
 
     async def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str, Any]:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
-        loop = asyncio.get_running_loop()
+
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
-        result = await loop.run_until_complete(asyncio.gather(self._api_request(api_call)))
-        return result 
+        result = asyncio.create_task(self._api_request(api_call))
+        await result
+        return result.result()
         
         
     
