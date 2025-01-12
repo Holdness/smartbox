@@ -221,7 +221,7 @@ class Session(object):
         data = {"power_limit": str(power_limit)} 
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
-    async def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str, Any]:
+    def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str, Any]:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         loop = asyncio.get_running_loop()
         
@@ -229,13 +229,7 @@ class Session(object):
     
         with concurrent.futures.ThreadPoolExecutor() as pool:
         
-            result = await loop.run_in_executor(pool, self._api_request(api_call))
-        
-        return result
-    
-
-
-
-        
-    
-        
+            result = loop.run_in_executor(pool, self._api_request(api_call))
+           
+        while not result.done():
+            return result.result()
