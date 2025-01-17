@@ -110,13 +110,22 @@ class Session(object):
             "x-serialid": self._x_serialid,
         }
 
-    async def _api_request(self, path: str) -> Any:
+    def _api_request(self, path: str) -> Any:
+        self._check_refresh()
+        api_url = f"{self._api_host}/api/v2/{path}"
+        _LOGGER.debug(f"API Call: {api_url}")
+        response = self._requests.get(api_url, headers=self._get_headers())
+        response.raise_for_status()
+        return response.json()
+    
+    async def _async_api_request(self, path: str) -> Any:
         self._check_refresh()
         api_url = f"{self._api_host}/api/v2/{path}"
         async with aiohttp.ClientSession() as session:
             _LOGGER.debug(f"API Call: {api_url}")
             async with session.get(api_url, headers=self._get_headers()) as response:
                 response.raise_for_status()
+                await response.json()
                 return response.json()
 
     def _api_post(self, data: Any, path: str) -> Any:
@@ -228,5 +237,5 @@ class Session(object):
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
     
-        return self._api_request(api_call)
+        return asyncio.run(self._api_request(api_call))
         
