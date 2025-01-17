@@ -7,6 +7,7 @@ import time
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from typing import Any, Dict, List
+import aiohttp
 import asyncio
 
 from .error import SmartboxError
@@ -109,13 +110,14 @@ class Session(object):
             "x-serialid": self._x_serialid,
         }
 
-    def _api_request(self, path: str) -> Any:
+    async def _api_request(self, path: str) -> Any:
         self._check_refresh()
         api_url = f"{self._api_host}/api/v2/{path}"
-        _LOGGER.debug(f"API Call: {api_url}")
-        response = self._requests.get(api_url, headers=self._get_headers())
-        response.raise_for_status()
-        return response.json()
+        async with aiohttp.ClientSession() as session:
+            _LOGGER.debug(f"API Call: {api_url}")
+            async with session.get(api_url, headers=self._get_headers()) as response:
+                response.raise_for_status()
+                return response.json()
 
     def _api_post(self, data: Any, path: str) -> Any:
         self._check_refresh()
