@@ -238,16 +238,16 @@ class Session(object):
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
         
-        loop = asyncio.new_event_loop()
+     #   loop = asyncio.new_event_loop()
         
-        if loop.is_running:
-            task = asyncio.create_task(self._api_request(api_call))
-            x1 = loop.run_until_complete(asyncio.gather(*task))
-            for a in x1:
-                x = a
+     #   if loop.is_running:
+     #       task = asyncio.create_task(self._api_request(api_call))
+     #       x1 = loop.run_until_complete(asyncio.gather(*task))
+     #       for a in x1:
+     #           x = a
               
-        else:
-            x = self._api_request(api_call)
+     #   else:
+        x = self._api_request(api_call)
         
        # x= self._async_api_request(api_call)
                                        
