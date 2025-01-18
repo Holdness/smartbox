@@ -233,12 +233,17 @@ class Session(object):
         data = {"power_limit": str(power_limit)} 
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
-    def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str,Any]:
+    def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Any:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
     
-        x =asyncio.run(self._async_api_request(api_call))
+        task = asyncio.create_task(self._async_api_request(api_call))
+        
+        loop = asyncio.get_event_loop()
+       # x= self._async_api_request(api_call)
+        x = loop.run_until_complete(asyncio.gather(*task)) 
+        loop.close
                        
         _LOGGER.debug(f"X: {x}")
         return x
