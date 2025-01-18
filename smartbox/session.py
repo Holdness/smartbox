@@ -242,7 +242,6 @@ class Session(object):
         
         if loop.is_running:
             task = asyncio.create_task(self._api_request(api_call))
-            loop = asyncio.get_event_loop()
             x1 = loop.run_until_complete(asyncio.gather(*task))
             for a in x1:
                 x = a
