@@ -126,8 +126,9 @@ class Session(object):
             async with session.get(api_url, headers=self._get_headers()) as response:
                 response.raise_for_status()
                 await response.json()
+                session.close
                 return response.json()
-
+ 
     def _api_post(self, data: Any, path: str) -> Any:
         self._check_refresh()
         api_url = f"{self._api_host}/api/v2/{path}"
@@ -232,13 +233,13 @@ class Session(object):
         data = {"power_limit": str(power_limit)} 
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
-    async def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str,Any]:
+    def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Dict[str,Any]:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
     
-        x = await self._async_api_request(api_call)
-        
+        x =asyncio.run(self._async_api_request(api_call))
+                       
         _LOGGER.debug(f"X: {x}")
         return x
         
