@@ -237,8 +237,8 @@ class Session(object):
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
-    
-        loop = asyncio.get_event_loop()
+        
+        loop = asyncio.new_event_loop()
         
         if loop.is_running:
             task = asyncio.create_task(self._api_request(api_call))
