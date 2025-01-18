@@ -237,5 +237,8 @@ class Session(object):
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
     
-        return await self._async_api_request(api_call)
+        x = await self._async_api_request(api_call)
+        
+        _LOGGER.debug(f"X: {x}")
+        return x
         
