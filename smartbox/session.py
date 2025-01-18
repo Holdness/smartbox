@@ -250,7 +250,8 @@ class Session(object):
         task = asyncio.create_task(self._api_request(api_call))
         
         x = await task
-        while task.done != True:
+        while x.done != True:
+            
             _LOGGER.debug(f"Task is done")
         
        # loop = asyncio.get_running_loop()
