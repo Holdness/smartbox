@@ -250,11 +250,13 @@ class Session(object):
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
-        task = await self._async_api_request(api_call)   
+        task =  asyncio.gather(self._async_api_request(api_call) )
+        _LOGGER.debug(f"Task: {task._state}")
     
-        loop = asyncio.get_running_loop()
-        x = await loop.run_until_complete(self._api_request(api_call))
-                                       
+        x = task.result
+        #loop = asyncio.get_running_loop()
+        #x = await loop.run_until_complete(self._api_request(api_call))
+                                
         _LOGGER.debug(f"X: {x}")
         return x
         
