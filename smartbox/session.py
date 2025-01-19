@@ -123,10 +123,10 @@ class Session(object):
         api_url = f"{self._api_host}/api/v2/{path}"
         async with aiohttp.ClientSession() as session:
             _LOGGER.debug(f"API Call: {api_url}")
-            loop = asyncio.get_running_loop()
+#            loop = asyncio.get_running_loop()
             async with session.get(api_url, headers=self._get_headers()) as response:
                 response.raise_for_status()
-                await loop.run_in_executor(None, response.json)
+                # await loop.run_in_executor(None, response.json)
                 session.close
                 x = await response.json()
                 _LOGGER.debug(f"JSON: {response.json}, X: {x}")
@@ -246,14 +246,14 @@ class Session(object):
         _LOGGER.debug(f"X: {x}")
         return x
     
-    async def get_device_samples_blk(self, device_id: str, node: Dict[str, Any]) -> Any:
+    def get_device_samples_blk(self, device_id: str, node: Dict[str, Any]) -> Any:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
-        task =  asyncio.gather(self._async_api_request(api_call) )
-        _LOGGER.debug(f"Task: {task._state}")
+        task =  self._async_api_request(api_call) 
+        #_LOGGER.debug(f"Task: {task._state}")
     
-        x = task.result
+        x = task
         #loop = asyncio.get_running_loop()
         #x = await loop.run_until_complete(self._api_request(api_call))
                                 
