@@ -7,8 +7,6 @@ import time
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from typing import Any, Dict, List
-import aiohttp
-import asyncio
 
 from .error import SmartboxError
 
@@ -117,20 +115,6 @@ class Session(object):
         response = self._requests.get(api_url, headers=self._get_headers())
         response.raise_for_status()
         return response.json()
-    
-    async def _async_api_request(self, path: str) -> Dict[str,Any]:
-        self._check_refresh()
-        api_url = f"{self._api_host}/api/v2/{path}"
-        async with aiohttp.ClientSession() as session:
-            _LOGGER.debug(f"API Call: {api_url}")
-#            loop = asyncio.get_running_loop()
-            async with session.get(api_url, headers=self._get_headers()) as response:
-                response.raise_for_status()
-                # await loop.run_in_executor(None, response.json)
-                session.close
-                x = await response.json()
-                _LOGGER.debug(f"JSON: {response.json}, X: {x}")
-                return x
  
     def _api_post(self, data: Any, path: str) -> Any:
         self._check_refresh()
@@ -241,22 +225,17 @@ class Session(object):
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
         
-        x = self._api_request(api_call)     
+        samples = self._api_request(api_call)     
                                       
-        _LOGGER.debug(f"X: {x}")
-        return x
+        _LOGGER.debug(f"Samples: {samples}")
+        return samples
     
-    def get_device_samples_blk(self, device_id: str, node: Dict[str, Any]) -> Any:
-        _LOGGER.debug(f"Get_Device_Samples_Node:")
+    def set_samples(self, device_id: str, node: Dict[str, Any]) -> Any:
+        _LOGGER.debug(f"Set_Device_Samples_Node:")
         
         api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
-        task =  self._async_api_request(api_call) 
-        #_LOGGER.debug(f"Task: {task._state}")
-    
-        x = task
-        #loop = asyncio.get_running_loop()
-        #x = await loop.run_until_complete(self._api_request(api_call))
-                                
-        _LOGGER.debug(f"X: {x}")
-        return x
+        samples = self._api_request(api_call) 
+        _LOGGER.debug(f"Samples: {samples}")
+        return samples
+
         
