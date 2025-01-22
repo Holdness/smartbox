@@ -23,6 +23,7 @@ class OptimisedJQMatcher(object):
     """jq matcher that doesn't bother with jq for simple one-level element queries."""
 
     def __init__(self, jq_expr: str):
+        _LOGGER.debug(f"Socket Session Samples: {SocketSession.samples}")
         _LOGGER.debug("OptimisedJQMatcher(object)")
         """Create an OptimisedJQMatcher for any jq expression."""
         m = _SIMPLE_JQ_RE.match(jq_expr)
@@ -33,9 +34,10 @@ class OptimisedJQMatcher(object):
         else:
             self._compiled_jq = jq.compile(jq_expr)
         
-
+        
+        
     def match(self, input_data: Dict[str, Any]) -> Iterable:
-
+        
         _LOGGER.debug("OptimisedJQMatcher(object) - Match")
         _LOGGER.debug(f"Data: {input_data}")
         """Return matches for the given dev data."""
