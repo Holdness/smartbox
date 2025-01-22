@@ -23,7 +23,7 @@ class OptimisedJQMatcher(object):
     """jq matcher that doesn't bother with jq for simple one-level element queries."""
 
     def __init__(self, jq_expr: str):
-        _LOGGER.debug(f"Socket Session Samples: {SocketSession.samples}")
+
         _LOGGER.debug("OptimisedJQMatcher(object)")
         """Create an OptimisedJQMatcher for any jq expression."""
         m = _SIMPLE_JQ_RE.match(jq_expr)
@@ -34,7 +34,7 @@ class OptimisedJQMatcher(object):
         else:
             self._compiled_jq = jq.compile(jq_expr)
         
-        
+
         
     def match(self, input_data: Dict[str, Any]) -> Iterable:
         
@@ -147,6 +147,7 @@ class UpdateManager(object):
     async def run(self) -> None:
         _LOGGER.debug("UpdateManager(object) - Run")
         """Run the socket session asynchronously, waiting for updates."""
+
         await self._socket_session.run()
 
     def subscribe_to_dev_data(self, jq_expr: str, callback: Callable) -> None:
@@ -193,32 +194,32 @@ class UpdateManager(object):
             lambda p: callback(int(p)),
         )
             
-
+    
     def subscribe_to_node_samples(
         self, callback: Callable[[str, int, Dict[str, Any], str, str], None]
     ) -> None:
         """Subscribe to node samples updates."""
-
+        samples: Dict[str,Any] = self._socket_session.samples
         start = str(round(time.time() - time.time() % 3600) - 3600)
         end = str(round(time.time() - time.time()  % 3600) + 1800)
 
      
-        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}")
+        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}, Samples: {samples}")
              
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
             _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Data: {data} ")
-            
+            data = samples
             callback(data["type"], int(data["addr"]), data["samples"], start, end),
 
         self.subscribe_to_dev_data(
             "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
         )
        
-        def update_wrapper(data: Dict[str, Any], node_type: str, addr: int, start: str, end:str) -> None:
+        def update_wrapper(samples: Dict[str, Any], node_type: str, addr: int, start: str, end:str) -> None:
             
-            _LOGGER.debug(f"Update Wrapper : Data: {data}, Node Type: {type}, Addr: {addr}")
+            _LOGGER.debug(f"Update Wrapper : Data: {samples}, Node Type: {type}, Addr: {addr}")
       
-            callback(node_type, addr, data, start, end),
+            callback(node_type, addr, samples, start, end),
        
         self.subscribe_to_updates(            
             r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&end=(?P<end>)", ".body", update_wrapper
