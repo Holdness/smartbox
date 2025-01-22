@@ -131,7 +131,7 @@ class UpdateManager(object):
             session, device_id, self._dev_data_cb, self._update_cb, samples, **kwargs
         )
         
-        _LOGGER.debug(f"Socket Session: {self.socket_session}, Samples: {self.socket_session.samples}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
+        _LOGGER.debug(f"Socket Session: {self.socket_session}, Samples: {samples}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
             _LOGGER.debug(f"dev_data_subscriptions: {item}")
