@@ -86,12 +86,14 @@ class SocketSession(object):
         ping_interval: int = 20,
         reconnect_attempts: int = _DEFAULT_RECONNECT_ATTEMPTS,
         backoff_factor: float = _DEFAULT_BACKOFF_FACTOR,
+        samples: Dict[str,Any] = {}
     ) -> None:
         self._session = session
         self._device_id = device_id
         self._ping_interval = ping_interval
         self._reconnect_attempts = reconnect_attempts
         self._backoff_factor = backoff_factor
+    
 
         if verbose:
             self._sio = socketio.AsyncClient(
@@ -107,7 +109,7 @@ class SocketSession(object):
         self._api_v2_ns = SmartboxAPIV2Namespace(
             session, _API_V2_NAMESPACE, dev_data_callback, node_update_callback
         )
-        _LOGGER.debug(f"Dev Data Callback: {dev_data_callback}, Node Ipdate callback: {node_update_callback}")
+        _LOGGER.debug(f"Dev Data Callback: {dev_data_callback}, Node Update callback: {node_update_callback}")
         _LOGGER.debug(f"Session Item: {session}")
         self._sio.register_namespace(self._api_v2_ns)
 
