@@ -131,6 +131,8 @@ class UpdateManager(object):
             session, device_id, self._dev_data_cb, self._update_cb, samples, **kwargs
         )
         
+
+        
         _LOGGER.debug(f"Socket Session: {self.socket_session}, Samples: {samples}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
@@ -139,6 +141,10 @@ class UpdateManager(object):
         for item in self._update_subscriptions:
             _LOGGER.debug(f"update_subscriptions: {item}")
 
+    @property
+    def samples(self) -> Dict[str,Any]:
+        return self.socket_session.samples
+    
     @property
     def socket_session(self) -> SocketSession:
         """Get the underlying socket session."""
@@ -199,7 +205,7 @@ class UpdateManager(object):
         self, callback: Callable[[str, int, Dict[str, Any], str, str], None]
     ) -> None:
         """Subscribe to node samples updates."""
-        samples: Dict[str,Any] = self._socket_session.samples
+        samples: Dict[str,Any] = self.samples
         start = str(round(time.time() - time.time() % 3600) - 3600)
         end = str(round(time.time() - time.time()  % 3600) + 1800)
 
