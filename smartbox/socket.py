@@ -93,7 +93,7 @@ class SocketSession(object):
         self._ping_interval = ping_interval
         self._reconnect_attempts = reconnect_attempts
         self._backoff_factor = backoff_factor
-    
+        self._samples: Dict[str, Any] = samples
 
         if verbose:
             self._sio = socketio.AsyncClient(
