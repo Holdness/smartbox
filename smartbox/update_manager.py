@@ -124,14 +124,14 @@ class UpdateSubscription(object):
 class UpdateManager(object):
     _LOGGER.debug("UpdateManager(object)")
     """Manages subscription callbacks to receive updates from a Smartbox socket."""
-    def __init__(self, session: Session, device_id: str, **kwargs):
-        _LOGGER.debug(f"Update manager kwargs: {kwargs}")
+    def __init__(self, session: Session, device_id: str, samples: Dict[str, Any], **kwargs):
+        _LOGGER.debug(f"Update manager kwargs: {kwargs}"),
         """Create an UpdateManager for a smartbox socket."""
         self._socket_session = SocketSession(
-            session, device_id, self._dev_data_cb, self._update_cb, **kwargs
+            session, device_id, self._dev_data_cb, self._update_cb, samples, **kwargs
         )
         
-        _LOGGER.debug(f"Socket Session: {self.socket_session}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
+        _LOGGER.debug(f"Socket Session: {self.socket_session}, Samples: {self.socket_session.samples}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
             _LOGGER.debug(f"dev_data_subscriptions: {item}")
