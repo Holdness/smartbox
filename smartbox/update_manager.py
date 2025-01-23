@@ -101,7 +101,7 @@ class UpdateSubscription(object):
         _LOGGER.debug("UpdateSubscription(object) - Match")
         _LOGGER.debug(f"Data: {input_data}")
         """Return matches for this subscription for the given update."""
-
+        
         path_match = self._path_regex.search(input_data["path"])
         if not path_match:
             return False
@@ -133,7 +133,7 @@ class UpdateManager(object):
         
 
         
-        _LOGGER.debug(f"Socket Session: {self.socket_session}, Samples: {nodes}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
+        _LOGGER.debug(f"Socket Session :{self.socket_session}, Samples: {nodes}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
             _LOGGER.debug(f"dev_data_subscriptions: {item}")
@@ -141,7 +141,7 @@ class UpdateManager(object):
         for item in self._update_subscriptions:
             _LOGGER.debug(f"update_subscriptions: {item}")
 
-    
+        
     @property
     def socket_session(self) -> SocketSession:
         """Get the underlying socket session."""
@@ -150,7 +150,7 @@ class UpdateManager(object):
     async def run(self) -> None:
         _LOGGER.debug("UpdateManager(object) - Run")
         """Run the socket session asynchronously, waiting for updates."""
-
+        
         await self._socket_session.run()
 
     def subscribe_to_dev_data(self, jq_expr: str, callback: Callable) -> None:
@@ -202,7 +202,8 @@ class UpdateManager(object):
         self, callback: Callable[[str, int, Dict[str, Any], str, str], None]
     ) -> None:
         """Subscribe to node samples updates."""
-       # samples: Dict[str,Any] = self.samples
+        samples: Dict[str,Any] = self.socket_session.nodes
+        _LOGGER.debug(f"Samples Socket: {samples}")
         start = str(round(time.time() - time.time() % 3600) - 3600)
         end = str(round(time.time() - time.time()  % 3600) + 1800)
 
