@@ -202,7 +202,7 @@ class UpdateManager(object):
         self, callback: Callable[[str, int, Dict[str, Any], str, str], None]
     ) -> None:
         """Subscribe to node samples updates."""
-        samples: Dict[str,Any] = self.socket_session.nodes
+        samples: Dict[str,Any] = self._socket_session.nodes
         _LOGGER.debug(f"Samples Socket: {samples}")
         start = str(round(time.time() - time.time() % 3600) - 3600)
         end = str(round(time.time() - time.time()  % 3600) + 1800)
