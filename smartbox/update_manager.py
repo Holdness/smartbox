@@ -207,7 +207,7 @@ class UpdateManager(object):
         end = str(round(time.time() - time.time()  % 3600) + 1800)
 
      
-        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}, Samples: {samples}")
+        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}, Samples: {}")
              
         def dev_data_wrapper(data: Dict[str, Any]) -> None:
             _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Data: {data} ")
