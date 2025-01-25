@@ -2,9 +2,11 @@ import datetime
 import json
 import logging
 import requests
+import time
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from typing import Any, Dict, List
+
 
 from .error import SmartboxError
 
@@ -109,10 +111,13 @@ class Session(object):
     def _api_request(self, path: str) -> Any:
         self._check_refresh()
         api_url = f"{self._api_host}/api/v2/{path}"
-        response = self._requests.get(api_url, headers=self._get_headers())
-        response.raise_for_status()
-        return response.json()
-
+        _LOGGER.debug(f"API Call: {api_url}")
+        
+        #response = self._requests.get(api_url, headers=self._get_headers())
+        #response.raise_for_status()
+        #return response.json()
+        return "{'samples': [{'t': 1737831600, 'temp': '13.1', 'counter': 180133}, {'t': 1737835200, 'temp': '12.9', 'counter': 180133}]}"
+ 
     def _api_post(self, data: Any, path: str) -> Any:
         self._check_refresh()
         api_url = f"{self._api_host}/api/v2/{path}"
@@ -214,11 +219,25 @@ class Session(object):
         return int(resp["power_limit"])
 
     def set_device_power_limit(self, device_id: str, power_limit: int) -> None:
-        data = {"power_limit": str(power_limit)}
+        data = {"power_limit": str(power_limit)} 
         self._api_post(data=data, path=f"devs/{device_id}/htr_system/power_limit")
 
-    def get_device_samples(self, device_id: str, node_type: str, node_addr: str, start_date: int, end_date: int) -> Dict[str, Any]:
+    def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Any:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
-        return self._api_request(
-        f"devs/{device_id}/{node_type}/{node_addr}/samples?start={str(start_date)}&end={str(end_date)}"
-        )
+        
+        api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
+        
+        samples = self._api_request(api_call)     
+                                      
+        _LOGGER.debug(f"Samples: {samples}")
+        return samples
+    
+    def set_samples(self, device_id: str, node: Dict[str, Any]) -> Any:
+        _LOGGER.debug(f"Set_Device_Samples_Node:")
+        
+        api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={int(round(time.time() - time.time() % 3600))- 3600}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
+        samples = self._api_request(api_call) 
+        _LOGGER.debug(f"Samples: {samples}")
+        return samples
+
+        
