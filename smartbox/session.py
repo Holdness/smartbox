@@ -1,3 +1,5 @@
+
+import concurrent.futures
 import datetime
 import json
 import logging
@@ -6,7 +8,6 @@ import time
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from typing import Any, Dict, List
-
 
 from .error import SmartboxError
 
@@ -112,11 +113,9 @@ class Session(object):
         self._check_refresh()
         api_url = f"{self._api_host}/api/v2/{path}"
         _LOGGER.debug(f"API Call: {api_url}")
-        
-        #response = self._requests.get(api_url, headers=self._get_headers())
-        #response.raise_for_status()
-        #return response.json()
-        return "{'samples': [{'t': 1737831600, 'temp': '13.1', 'counter': 180133}, {'t': 1737835200, 'temp': '12.9', 'counter': 180133}]}"
+        response = self._requests.get(api_url, headers=self._get_headers())
+        response.raise_for_status()
+        return response.json()
  
     def _api_post(self, data: Any, path: str) -> Any:
         self._check_refresh()
