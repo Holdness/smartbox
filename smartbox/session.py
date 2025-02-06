@@ -224,7 +224,7 @@ class Session(object):
     def get_device_samples(self, device_id: str, node: Dict[str, Any]) -> Any:
         _LOGGER.debug(f"Get_Device_Samples_Node:")
         
-        api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start=str(round(time.time() - time.time() % 3600) - 3600)&end={int(round(time.time() - time.time() % 3600)) + 1800}")
+        api_call: str = (f"devs/{device_id}/{node['type']}/{node['addr']}/samples?start={str(round(time.time() - time.time() % 3600) - 3600)}&end={int(round(time.time() - time.time() % 3600)) + 1800}")
         
         samples = self._api_request(api_call)     
                                       
