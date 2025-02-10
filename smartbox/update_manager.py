@@ -1,7 +1,3 @@
-
-
-
-
 """Smartbox socket update manager."""
 
 import jq
@@ -131,8 +127,7 @@ class UpdateManager(object):
             session, device_id, self._dev_data_cb, self._update_cb, nodes, **kwargs
         )
         
-
-        
+       
         _LOGGER.debug(f"Socket Session :{self.socket_session}, Samples: {nodes}, Data: {self._dev_data_cb} Update: {self._update_cb} ") 
         self._dev_data_subscriptions: List[DevDataSubscription] = []
         for item in self._dev_data_subscriptions:
@@ -173,8 +168,6 @@ class UpdateManager(object):
         
         sub = UpdateSubscription(path_regex, jq_expr, callback)
         self._update_subscriptions.append(sub)
-        
-        
 
     def subscribe_to_device_away_status(
         self, callback: Callable[[Dict[str, Any]], None]
@@ -197,38 +190,6 @@ class UpdateManager(object):
             lambda p: callback(int(p)),
         )
             
-    
-    def subscribe_to_node_samples(
-        self, callback: Callable[[str, int, Dict[str, Any], str, str], None]
-    ) -> None:
-        """Subscribe to node samples updates."""
-    #    samples: Dict[str,Any] = self._socket_session.nodes
-    #    _LOGGER.debug(f"Samples Socket: {samples}")
-        start = str(round(time.time() - time.time() % 3600) - 3600)
-        end = str(round(time.time() - time.time()  % 3600) + 1800)
-
-     
-        _LOGGER.debug(f"Subscribe to node samples: Self: {self}, Callback: {callback}, Samples:")
-             
-        def dev_data_wrapper(data: Dict[str, Any]) -> None:
-            _LOGGER.debug(f"Dev Data Wrapper Samples: Type: {data["type"]} , Addr: {data["addr"]}, Data: {data} ")
-        #    data = samples
-            callback(data["type"], int(data["addr"]), data["samples"], start, end),
-
-        self.subscribe_to_dev_data(
-            "(.nodes[] | {addr, type, samples})?", dev_data_wrapper
-        )
-       
-        def update_wrapper(samples: Dict[str, Any], node_type: str, addr: int, start: str, end:str) -> None:
-            
-            _LOGGER.debug(f"Update Wrapper : Data: {samples}, Node Type: {type}, Addr: {addr}")
-      
-            callback(node_type, addr, samples, start, end),
-       
-        self.subscribe_to_updates(            
-            r"^/(?P<node_type>[^/]+)/(?P<addr>\d+)/samples?start=(?P<start>)&end=(?P<end>)", ".body", update_wrapper
-        )    
-
 
     def subscribe_to_node_status(
         self, callback: Callable[[str, int, Dict[str, Any]], None]
